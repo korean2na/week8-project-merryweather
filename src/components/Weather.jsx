@@ -1,6 +1,16 @@
 export default function Weather(props) {
     if (!props.info) {
-        return (<p>LOADING</p>)
+        return (
+            <div className="text-center">
+                <div className="row justify-content-center mt-5">
+                    <div className="card col-5 py-4">
+                        <h2 className="mb-4"><strong>Location Not Found</strong></h2>
+                        <p>Please try again with a different search query.</p>
+                        <p>You may want to consider removing this location if it's saved as a favorite.</p>
+                    </div>
+                </div>
+            </div>
+        )
     }
 
     return (

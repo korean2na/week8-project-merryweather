@@ -18,8 +18,7 @@ export default function SingleZip() {
     }, [])
 
     return (
-        <div className="SingleZip">
-            <h2>SingleZip</h2>
+        <div className="SingleZip pt-5">
             <Weather info={info}/>
         </div>
     )

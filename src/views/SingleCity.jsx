@@ -18,8 +18,7 @@ export default function SingleCity() {
     }, [])
 
     return (
-        <div className="SingleCity">
-            <h2>SingleCity</h2>
+        <div className="SingleCity pt-5">
             <Weather info={info}/>
         </div>
     )

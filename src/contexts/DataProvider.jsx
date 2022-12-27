@@ -1,5 +1,5 @@
-import { useState, useEffect, createContext, useContext, useTransition } from "react";
-import { getFirestore, collection, getDocs, doc, getDoc, Timestamp, addDoc, query, orderBy, limit, setDoc, collectionGroup } from '@firebase/firestore'
+import { useState, useEffect, createContext, useContext} from "react";
+import { getFirestore, collection, doc, getDoc, getDocs, setDoc, addDoc, deleteDoc, query, orderBy} from '@firebase/firestore'
 import { AuthContext } from "./AuthProvider";
 
 export const DataContext = createContext()
@@ -162,7 +162,6 @@ export const DataProvider = function (props) {
 
     useEffect(() => {
         async function getZips() {
-            // const querySnapshot = await getDocs(collection(db, 'users', `${user.uid} `, 'zips'))
             const q = query(collection(db, 'users', `${user.uid} `, 'zips'), orderBy('zipCode', 'asc'))
             const querySnapshot = await getDocs(q)
             const zipDocs = []
@@ -181,14 +180,84 @@ export const DataProvider = function (props) {
         getZips()
     }, [user])
 
+    async function addCity(cityName) {
+        const newCity = {
+            cityName: cityName
+        }
 
+        const userDoc = await setDoc(doc(db, 'users', `${user.uid} `), {
+            username: user.username
+        })
+
+        const cityDoc = await addDoc(collection(db, 'users', `${user.uid} `, 'cities'), newCity)
+
+        newCity.id = cityDoc.id
+
+        setCities([newCity, ...cities])
+    }
+
+    async function addZip(zipCode) {
+        const newZip = {
+            zipCode: zipCode
+        }
+
+        const userDoc = await setDoc(doc(db, 'users', `${user.uid} `), {
+            username: user.username
+        })
+
+        const zipDoc = await addDoc(collection(db, 'users', `${user.uid} `, 'zips'), newZip)
+
+        newZip.id = zipDoc.id
+
+        setZips([newZip, ...zips])
+    }
     
+    async function removeCity(id) {
+        await deleteDoc(doc(db, 'users', `${user.uid} `, 'cities', `${id}`))
+
+        const q = query(collection(db, 'users', `${user.uid} `, 'cities'), orderBy('cityName', 'asc'))
+        const querySnapshot = await getDocs(q)
+        const cityDocs = []
+
+        querySnapshot.forEach((doc) => {
+            cityDocs.push({
+                id: doc.id,
+                uid: user.uid,
+                ...doc.data()
+            })
+
+            setCities(cityDocs)
+        })
+    }
+
+    async function removeZip(id) {
+        await deleteDoc(doc(db, 'users', `${user.uid} `, 'zips', `${id}`))
+
+        const q = query(collection(db, 'users', `${user.uid} `, 'zips'), orderBy('zipCode', 'asc'))
+        const querySnapshot = await getDocs(q)
+        const zipDocs = []
+
+        querySnapshot.forEach((doc) => {
+            zipDocs.push({
+                id: doc.id,
+                uid: user.uid,
+                ...doc.data()
+            })
+
+            setZips(zipDocs)
+        })
+    }
+
     const value = {
         cities,
         zips,
         toTitleCase,
         getCityWeather,
-        getZipWeather
+        getZipWeather,
+        addCity,
+        addZip,
+        removeCity,
+        removeZip
     }
 
     return (
