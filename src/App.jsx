@@ -5,8 +5,9 @@ import { AuthContext } from './contexts/AuthProvider'
 import LoginSplash from './views/LoginSplash';
 import Home from './views/Home';
 import Profile from './views/Profile';
-import SingleFav from './views/SingleFav';
-import Lookup from './views/Lookup';
+import SingleCity from './views/SingleCity';
+import SingleZip from './views/SingleZip';
+import Search from './views/Search';
 
 export default function App() {
   const { login, logout, user } = useContext(AuthContext)
@@ -18,7 +19,7 @@ export default function App() {
           <div className="container-fluid">
             <ul id="left-nav" className="navbar-nav align-items-center gap-4">
               <li className="nav-item"><Link to="/" className="nav-link active link-light"><strong>Home</strong></Link></li>
-              <li className="nav-item"><Link to="Lookup" className="nav-link active link-light"><strong>Lookup</strong></Link></li>
+              <li className="nav-item"><Link to="Search" className="nav-link active link-light"><strong>Weather Search</strong></Link></li>
             </ul>
             <ul id="right-nav" className="navbar-nav align-items-center gap-3">
               {
@@ -41,26 +42,33 @@ export default function App() {
           </div>
         </nav>
         <hr />
+
         <Routes>
-        <Route path="/" element={-
-          (user.loggedIn) ?
-          <>
-          <Home />
-          </> :
-          <>
-          <LoginSplash />
-          </>
-        } />
-        <Route path="/lookup" element={<Lookup />}></Route>
-        <Route path="/profile" element={
-          (user.loggedIn) ?
-          <>
-          <Profile />
-          </> :
-          <>
-          <LoginSplash />
-          </>
-        } />
+          <Route path="/" element={-
+            (user.loggedIn) ?
+            <>
+            <Home />
+            </> :
+            <>
+            <LoginSplash />
+            </>} />
+          <Route path="/search" element={<Search />}/>
+          <Route path="/weather">
+            <Route path="city">
+              <Route path=":cityName" element={<SingleCity />}/>
+            </Route>
+            <Route path="zip">
+              <Route path=":zipCode" element={<SingleZip />}/>
+            </Route>
+          </Route>
+          <Route path="/profile" element={
+            (user.loggedIn) ?
+            <>
+            <Profile />
+            </> :
+            <>
+            <LoginSplash />
+            </>} />
         </Routes>
       </BrowserRouter>
     </div>
