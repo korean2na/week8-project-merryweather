@@ -37,7 +37,7 @@ export default function Search() {
         const data = await getCityWeather(cityName)
         setInfo(data)
 
-        ev.target.reset()
+        // ev.target.reset()
     }
 
     async function searchZip(ev) {
@@ -48,7 +48,7 @@ export default function Search() {
         const data = await getZipWeather(zipCode)
         setInfo(data)
 
-        ev.target.reset()
+        // ev.target.reset()
     }
 
     return (
